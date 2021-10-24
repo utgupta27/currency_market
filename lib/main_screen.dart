@@ -18,7 +18,8 @@ class _MainScreenState extends State<MainScreen> {
     var req = await http.get(Uri.parse(myUrl),
         headers: {"X-CMC_PRO_API_KEY": "469a77a9-9be8-429a-9393-82c7645d67fd"});
     infos = json.decode(req.body);
-    // print(infos['data'].toString());
+    print("##############################################");
+    print(infos['data'].toString());
     return infos['data'];
   }
 
@@ -34,6 +35,16 @@ class _MainScreenState extends State<MainScreen> {
   getName(data, index) {
     return data[index]['name'];
   }
+
+  int getId(data, index) {
+    return data[index]["id"];
+  }
+
+  // logoUrl(id) {
+  //   return "https://s2.coinmarketcap.com/static/img/coins/64x64/" +
+  //       id.toString() +
+  //       ".png";
+  // }
 
   // getAge(data, index) {
   //   return data[index]['min_age_limit'];
@@ -73,7 +84,10 @@ class _MainScreenState extends State<MainScreen> {
               // print('project snapshot data is: ${projectSnap.data}');
               return Center(child: CircularProgressIndicator());
             }
-            // print('project snapshot data is: ${projectSnap.data}');
+            if (projectSnap.hasError) {
+              Center(child: Text("${projectSnap.hasError}"));
+            }
+
             // var ind = projectSnap.data.length;
             return ListView.builder(
               itemCount: getCount(projectSnap.data),
@@ -86,10 +100,20 @@ class _MainScreenState extends State<MainScreen> {
                     child: ExpansionTile(
                       // backgroundColor: Colors.blue[100],
                       collapsedBackgroundColor: Colors.grey[100],
-                      title: Text(
-                        getName(projectSnap.data, index),
-                        style: const TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      title: ListTile(
+                        leading: Container(
+                          height: 45,
+                          width: 45,
+                          child: Image.network(
+                              "https://s2.coinmarketcap.com/static/img/coins/64x64/" +
+                                  getId(projectSnap.data, index).toString() +
+                                  ".png"),
+                        ),
+                        title: Text(
+                          getName(projectSnap.data, index),
+                          style: const TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       // subtitle: ,
                       children: <Widget>[],
