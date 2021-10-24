@@ -4,7 +4,7 @@
 Flutter Mobile Development Internship Assignment. 
 
 ## Download Now
-<a href="https://github.com/utgupta27/currency_market/releases/download/v1/Currency.Market.apk" target="_blank">![image](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)</a> 
+<a href="https://github.com/utgupta27/currency_market/releases/download/v1/app-release.apk" target="_blank">![image](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)</a> 
 
 
     
