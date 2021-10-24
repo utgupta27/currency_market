@@ -18,15 +18,12 @@ class _MainScreenState extends State<MainScreen> {
     var req = await http.get(Uri.parse(myUrl),
         headers: {"X-CMC_PRO_API_KEY": "469a77a9-9be8-429a-9393-82c7645d67fd"});
     infos = json.decode(req.body);
-    print("##############################################");
-    print(infos['data'].toString());
     return infos['data'];
   }
 
   int getCount(data) {
     int count = 0;
     for (var i in data) {
-      print(i);
       count += 1;
     }
     return count;
@@ -40,39 +37,25 @@ class _MainScreenState extends State<MainScreen> {
     return data[index]["id"];
   }
 
-  // logoUrl(id) {
-  //   return "https://s2.coinmarketcap.com/static/img/coins/64x64/" +
-  //       id.toString() +
-  //       ".png";
-  // }
+  getSymbol(data, index) {
+    return data[index]["symbol"];
+  }
 
-  // getAge(data, index) {
-  //   return data[index]['min_age_limit'];
-  // }
+  getPrice(data, index) {
+    var price = data[index]['quote']['USD']['price'];
+    return price.toStringAsFixed(price.truncateToDouble() == price ? 0 : 2);
+  }
 
-  // getAvailableDose1(data, index) {
-  //   return data[index]['available_capacity_dose1'];
-  // }
+  getPercentChange24h(data, index) {
+    var perc = data[index]['quote']['USD']['percent_change_24h'];
+    return perc.toStringAsFixed(perc.truncateToDouble() == perc ? 0 : 2);
+  }
 
-  // getAvailableDose2(data, index) {
-  //   return data[index]['available_capacity_dose2'];
-  // }
-
-  // getFeeType(data, index) {
-  //   return data[index]['fee_type'];
-  // }
-
-  // getFee(data, index) {
-  //   return data[index]['fee'];
-  // }
-
-  // getVaccine(data, index) {
-  //   return data[index]['vaccine'];
-  // }
-
-  // getCenterId(data, index) {
-  //   return data[index]['center_id'];
-  // }
+  getMarketCap(data, index) {
+    var marCap = data[index]['quote']['USD']['market_cap'];
+    marCap = marCap / 1000000000;
+    return marCap.toStringAsFixed(marCap.truncateToDouble() == marCap ? 0 : 2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +67,9 @@ class _MainScreenState extends State<MainScreen> {
               // print('project snapshot data is: ${projectSnap.data}');
               return Center(child: CircularProgressIndicator());
             }
-            if (projectSnap.hasError) {
+            if (projectSnap.data == Null) {
               Center(child: Text("${projectSnap.hasError}"));
             }
-
             // var ind = projectSnap.data.length;
             return ListView.builder(
               itemCount: getCount(projectSnap.data),
@@ -102,21 +84,145 @@ class _MainScreenState extends State<MainScreen> {
                       collapsedBackgroundColor: Colors.grey[100],
                       title: ListTile(
                         leading: Container(
-                          height: 45,
-                          width: 45,
-                          child: Image.network(
-                              "https://s2.coinmarketcap.com/static/img/coins/64x64/" +
-                                  getId(projectSnap.data, index).toString() +
-                                  ".png"),
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Rank",
+                              ),
+                              Text(
+                                (index + 1).toString(),
+                                style: const TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                         ),
-                        title: Text(
-                          getName(projectSnap.data, index),
-                          style: const TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        title: Row(
+                          children: [
+                            SizedBox(
+                              height: 35,
+                              width: 35,
+                              child: Image.network(
+                                  "https://s2.coinmarketcap.com/static/img/coins/64x64/" +
+                                      getId(projectSnap.data, index)
+                                          .toString() +
+                                      ".png"),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: 130,
+                              child: Text(
+                                getName(projectSnap.data, index),
+                                style: const TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       // subtitle: ,
-                      children: <Widget>[],
+                      children: <Widget>[
+                        Text(
+                          getSymbol(projectSnap.data, index),
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Text(
+                                    "Price",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                  child: Text(
+                                    getPrice(projectSnap.data, index)
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Text(
+                                    "Market Capital",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                  child: Text(
+                                    getMarketCap(projectSnap.data, index)
+                                            .toString() +
+                                        " Bn",
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.deepPurpleAccent),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Text(
+                                    "Past 24Hrs",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                  child: Text(
+                                    getPercentChange24h(projectSnap.data, index)
+                                            .toString() +
+                                        " %",
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                            
+                            onPressed: () {},
+                            child: const Text("Add to Faourites"))
+                      ],
                     ),
                   ),
                 );
