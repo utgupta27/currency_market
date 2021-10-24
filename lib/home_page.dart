@@ -1,3 +1,4 @@
+import 'package:currency_market/fav_screen.dart';
 import 'package:currency_market/main_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.blue[900],
       ),
       body: MainScreen(),
+      
     );
   }
 }

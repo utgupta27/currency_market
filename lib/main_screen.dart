@@ -1,6 +1,8 @@
+import 'package:currency_market/fav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+// import 'package:currency_market/store.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   var infos;
+  List<int> favo = [];
   bool isLoading = false;
   Future<List> getData() async {
     String myUrl =
@@ -218,10 +221,38 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                           ],
                         ),
-                        ElevatedButton(
-                            
-                            onPressed: () {},
-                            child: const Text("Add to Faourites"))
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  // add(getSymbol(projectSnap.data, index));
+                                  if (!favo.contains(index + 1)) {
+                                    favo.add(index + 1);
+                                    const snackBar = SnackBar(
+                                        content: Text('Added to Favourites'));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    const snackBar = SnackBar(
+                                        content: Text('Already Added'));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                },
+                                child: const Text("Add to Favourites")),
+                            // ElevatedButton(
+                            //     onPressed: () {
+                            //       // remove(getSymbol(projectSnap.data, index));
+                            //       favo.remove(getId(projectSnap.data, index));
+                            //       const snackBar = SnackBar(
+                            //           content: Text('Removed from Favourites'));
+                            //       ScaffoldMessenger.of(context)
+                            //           .showSnackBar(snackBar);
+                            //     },
+                            //     child: const Text("Remove Favourites")),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -231,6 +262,21 @@ class _MainScreenState extends State<MainScreen> {
           },
           future: getData(),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => FavScreen(
+                info: infos,
+                favos: favo,
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.favorite),
+        backgroundColor: Colors.blue[900],
       ),
     );
   }
