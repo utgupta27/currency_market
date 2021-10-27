@@ -1,7 +1,7 @@
 
 ![image](https://user-images.githubusercontent.com/68506823/138594353-adb04818-8676-45da-8c8e-be90c5cb173d.png)
   Currency Market App
-Flutter Mobile Development Internship Assignment. 
+Flutter Mobile Development Assignment. 
 
 ## Download Now
 <a href="https://github.com/utgupta27/currency_market/releases/download/v1/app-release.apk" target="_blank">![image](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)</a> 
